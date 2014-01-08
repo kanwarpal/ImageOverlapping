@@ -1,0 +1,1901 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf390
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fmodern\fcharset0 CourierNewPSMT;\f2\fmodern\fcharset0 CourierNewPS-BoldMT;
+}
+{\colortbl;\red255\green255\blue255;\red57\green57\blue57;\red255\green255\blue255;\red38\green38\blue38;
+\red60\green61\blue64;\red101\green101\blue101;\red81\green81\blue81;\red106\green0\blue67;\red29\green0\blue255;
+\red101\green104\blue110;\red83\green83\blue83;\red222\green226\blue234;\red244\green244\blue244;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{none\}.}{\leveltext\leveltemplateid1\'01.;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww22380\viewh12060\viewkind0
+\deftab720
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 \cb3 Video Overlapping means merging of two or more video clips. We can also provide special effects, position, duration etc. for video clips as per the needs.\'94\
+For such type of video manipulation/Video Editing we can use AVFoundation framework available in iOS.\
+There are various ways to manipulate videos. Those are\uc0\u8232 1. Video Trimming\u8232 2. Merging number of videos into one video\u8232 3. Adding special effects and transition to existing video\u8232 4. Manipulation of text, image and audio in frame of video\u8232 5. Sound mixing in a video.\
+In this tutorial, will focus more on 
+\b \cf4 \'93AVFoundation framework\'94
+\b0 \cf2 . So that you can do manipulations of video on your own.\
+\pard\pardeftab720\sl520\sa200\qj
+
+\b \cf4 What is AVFoundation ? 
+\b0 \cf2 \uc0\u8232 AVFoundation -\u8232 This AVFoundation is core framework.In iPhone Architecture \'93AVFoundation\'94 is present in between the Application layer (UIKit Framework) and Core Media Services Layer.\
+\pard\pardeftab720\sl520\sa200\qj
+{\field{\*\fldinst{HYPERLINK "http://www.mobisoftinfotech.com/wp-content/uploads/2012/12/VideoManipulationBlog.png"}}{\fldrslt 
+\fs24 \cf0 }}\pard\pardeftab720\sl520\sa200\qj
+\cf2 \
+This framework has advantages mentioned as below.\
+Inspect \'96 If you need to know details of an asset\uc0\u8232 Play \'96 In more sophisticated ways than are possible with e.g. MPMoviePlayer\u8232 Compose/edit \'96 Use the media you want, where and when you want it\u8232 Re-encode/export \'96 Create new assets\u8232 Enjoy full access to camera \'96 Obtain data from input devices, with the option to write it to storage\
+Because of the above features \'93AVFoundation\'94 used for video manipulation.\
+This framework can be used for -\uc0\u8232 1. Media Asset management\u8232 2. Media Editing\u8232 3. Audio, Video recording\u8232 4. Playback\u8232 5. Metadata management for media items\u8232 6. Track management\
+\pard\pardeftab720\sl760\sa80
+
+\b\fs40 \cf4 Let\'92s Discuss About Avfoundation Framework Classes Which We Are Going To Use.\cf5 \
+\pard\pardeftab720\sl520\sa200\qj
+
+\fs28 \cf4 AVAsset
+\b0 \cf2  \'96 AVAsset is an abstract class of AVFoundation which indicates media of any like audio, video etc. Each asset is collection of tracks.\
+
+\b \cf4 AVAssetExportSession
+\b0 \cf2  \'96 This class is used for displaying output in the required form by preset. The preset can be LowQuality, MediumQuality, HighestQuality.\
+
+\b \cf4 AVMutableComposition
+\b0 \cf2  \'96 AVComposition is used for temporal editing. AVComposition it is collection of tracks. Each track presents media of specific type e.g. audios, videos according to it\'92s timeline. AVMutableComposition is mutable subclass of AVComposition. We can use it to create new composition from existing assets.\uc0\u8232 Tracks are fixed in AVComposition. For Track manipulation AVMutableComposition is used.\
+
+\b \cf4 AVMutableCompositionTrack
+\b0 \cf2  \'96 Each track represented by AVCompositionTrack. And tracks includes a media type, track identifier etc. AVMutableCompositionTrack this is mutable subclass of AVCompositionTrack, that allows us for insert, remove, scale etc. operations on track segments without affecting their lower level representation.\
+
+\b \cf4 AVMutableVideoComposition
+\b0 \cf2  \'96 This class is provided to add instructions. AVMutableVideoComposition contains array of AVMutableVideoCompositionInstruction.\
+
+\b \cf4 AVMutableVideoCompositionInstruction
+\b0 \cf2  \'96 AVMutableComposition maintains an array of instructions i.e. AVMutableVideoCompositionInstruction to perform it\'92s composition.\
+
+\b \cf4 AVMutableVideoCompositionLayerInstruction
+\b0 \cf2  \'96 AVVideoCompositionInstructions itself contains an Array of AVVideoCompositionLayerInstruction defined for each layer.\
+\pard\pardeftab720\sl760\sa80
+
+\b\fs40 \cf4 Other Than Avfoundation We Are Using Below Mentioned Frameworks-\cf5 \
+\pard\pardeftab720\sl520\sa200\qj
+
+\fs28 \cf4 MediaPlayer framework
+\b0 \cf2  -\uc0\u8232 This framework is present in Application layer [Above UIKit framework] and it is used to play audio, video, music, movie etc.\u8232 This Framework Provides classes like \ul MPMediaController\ulnone  and \ul MPMediaViewController\ulnone used to play streamed video content.\uc0\u8232 In Our tutorial we are going to use it for playing overlapped video.\u8232 Instead you can use AVPlayer also for playing overlapped video if you want custom player for video.\
+
+\b \cf4 AssetsLibrary framework
+\b0 \cf2  -\uc0\u8232 This framework used to access and store videos and pictures from Photos application.\u8232 We are going to save our video after overlapping to photos application.\u8232 For that we are using \ul ALAssetsLibrary\ulnone  class.\
+
+\b \cf4 CoreMedia framework
+\b0 \cf2  -\uc0\u8232 This is low-level C interface.\u8232 This framework is present in Core Services Layer. which is below the Application layer [below AVFoundation framework].\u8232 It provides many of the primitives used in AVFoundation like Time related data structures and objets for description and carriage for media data.\u8232 Here we are going to use Time related data structures\u8232 \ul CMTime\ulnone  \'96 For arithmetic comparisons.\uc0\u8232 \ul CMTimeRange\ulnone  \'96 For containment, unions and intersection.\uc0\u8232 and we can variantly use classes from this framework as per our requirement.\
+
+\b \cf4 MobileCoreServices framework
+\b0 \cf2  -\uc0\u8232 This framework is also from Core Services Layer means it is below the Application layer [below AVFoundation framework].\u8232 Defines low level types used in Uniform Type Identifiers (UTI\'92s).\u8232 we are using here class\
+\pard\pardeftab720\sl520\sa200\qj
+\cf2 \ul \ulc2 UTCoreTypes\ulnone  \'96 it defines number of constants. Out of them we are going to use kUTTypeMovie referencing when we selecting media.\
+\pard\pardeftab720\sl760
+
+\b\fs34 \cf4 I Am Going To Take Merging Of Two Videos As An Example For This Tutorial \'96\cf5 \
+\pard\pardeftab720\sl520\sa200\qj
+
+\b0\fs28 \cf2 1. Create a new project with view based application named \'91VideoOverlappingDemo\'92\uc0\u8232 2. Include Following framework\
+\pard\pardeftab720\sl520\sa200\qj
+{\field{\*\fldinst{HYPERLINK "http://www.mobisoftinfotech.com/wp-content/uploads/2012/12/frameworkAdd.png"}}{\fldrslt 
+\fs24 \cf0 }}\pard\pardeftab720\sl520\sa200\qj
+\cf2 \
+\pard\pardeftab720\sl760
+
+\b \cf4 Common Setup -\cf5 \
+\pard\pardeftab720\sl520\sa200\qj
+
+\b0 \cf2 1. Add Three buttons to ViewController.xib as in figure below -\uc0\u8232 {\field{\*\fldinst{HYPERLINK "http://www.mobisoftinfotech.com/wp-content/uploads/2012/12/mainxib.png"}}{\fldrslt 
+\fs24 \cf0 }}\
+2. Add this code into our ViewController.h file\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth14280\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\
+11\
+12\
+13\
+14\
+15\
+16\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf7 #import <UIKit/UIKit.h>\cf2 \
+\cf7 #import <MobileCoreServices/UTCoreTypes.h>\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 @interface
+\f1\b0 \cf2  \cf0 ViewController : UIViewController\cf2 \
+\'a0\
+
+\f2\b \cf8 @property
+\f1\b0 \cf2  \cf0 (
+\f2\b \cf8 nonatomic
+\f1\b0 \cf0 , strong) 
+\f2\b \cf8 IBOutlet
+\f1\b0 \cf2  \cf0 UIButton *videoOneButton;\cf2 \
+
+\f2\b \cf8 @property
+\f1\b0 \cf2  \cf0 (
+\f2\b \cf8 nonatomic
+\f1\b0 \cf0 , strong) 
+\f2\b \cf8 IBOutlet
+\f1\b0 \cf2  \cf0 UIButton *videoTwoButton;\cf2 \
+
+\f2\b \cf8 @property
+\f1\b0 \cf2  \cf0 (
+\f2\b \cf8 nonatomic
+\f1\b0 \cf0 , strong) 
+\f2\b \cf8 IBOutlet
+\f1\b0 \cf2  \cf0 UIButton *overlapVideoButton;\cf2 \
+
+\f2\b \cf8 @property
+\f1\b0 \cf2  \cf0 (
+\f2\b \cf8 nonatomic
+\f1\b0 \cf0 , strong) 
+\f2\b \cf8 NSURL
+\f1\b0 \cf2  \cf0 *videoOneURL;\cf2 \
+
+\f2\b \cf8 @property
+\f1\b0 \cf2  \cf0 (
+\f2\b \cf8 nonatomic
+\f1\b0 \cf0 , strong) 
+\f2\b \cf8 NSURL
+\f1\b0 \cf2  \cf0 *videoTwoURL;\cf2 \
+
+\f2\b \cf8 @property
+\f1\b0 \cf2  \cf0 (
+\f2\b \cf8 nonatomic
+\f1\b0 \cf0 , strong) UIImagePickerController *picker;\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 - (
+\f2\b \cf8 IBAction
+\f1\b0 \cf0 )videoOneButtonTapped:(\cf2 id\cf0 )sender;\cf2 \
+\cf0 - (
+\f2\b \cf8 IBAction
+\f1\b0 \cf0 )videoTwoButtonTapped:(\cf2 id\cf0 )sender;\cf2 \
+\cf0 - (
+\f2\b \cf8 IBAction
+\f1\b0 \cf0 )overlapVideoButtonTapped:(\cf2 id\cf0 )sender;\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 @end
+\f1\b0 \cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 Implement UIImagePickerControllerDelegate for UIImagePickerController.\
+4. Make connection in xib for all buttons and button actions \'96 {\field{\*\fldinst{HYPERLINK "http://www.mobisoftinfotech.com/wp-content/uploads/2012/12/ibimage.png"}}{\fldrslt 
+\fs24 \cf0 }}\
+\pard\pardeftab720\sl520\sa200\qj
+
+\b \cf4 Step 1 \'96 Get Video From Media Library\uc0\u8232 Step 2 \'96 Manipulation on video and save\u8232 Step 3 \'96 play video
+\b0 \cf2 \
+\pard\pardeftab720\sl760
+
+\b \cf4 Step 1 \'96 Get Video From Media Library\cf5 \
+\pard\pardeftab720\sl520\sa200\qj
+
+\b0 \cf2 1. Add below code into ViewController.m\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth14080\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\
+11\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf7 #pragma mark - Event Handlers\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 -(
+\f2\b \cf8 IBAction
+\f1\b0 \cf0 )videoOneButtonTapped:(\cf2 id\cf0 )sender \{\cf2 \
+\cf0 isVideoOne = 
+\f2\b \cf8 YES
+\f1\b0 \cf0 ;\cf2 \
+\cf0 [
+\f2\b \cf8 self
+\f1\b0 \cf2  \cf0 browseMediaLibraryFromViewController:
+\f2\b \cf8 self
+\f1\b0 \cf2  \cf0 withDelegate:
+\f2\b \cf8 self
+\f1\b0 \cf0 ];\cf2 \
+\cf0 \}\cf2 \
+\'a0\
+\cf0 - (
+\f2\b \cf8 IBAction
+\f1\b0 \cf0 )videoTwoButtonTapped:(\cf2 id\cf0 )sender \{\cf2 \
+\cf0 isVideoOne = 
+\f2\b \cf8 NO
+\f1\b0 \cf0 ;\cf2 \
+\cf0 [
+\f2\b \cf8 self
+\f1\b0 \cf2  \cf0 browseMediaLibraryFromViewController:
+\f2\b \cf8 self
+\f1\b0 \cf2  \cf0 withDelegate:
+\f2\b \cf8 self
+\f1\b0 \cf0 ];\cf2 \
+\cf0 \}\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 This method will be called on VideoOneButton and VideoTwoButton tapped respectively.\
+2. Definition for method browseMediaLibraryFromViewController:withDelegate: as below -\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth19200\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\
+11\
+12\
+13\
+14\
+15\
+16\
+17\
+18\
+19\
+20\
+21\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf7 #pragma mark - Private Methods\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 - (\cf2 BOOL\cf0 )browseMediaLibraryFromViewController:(UIViewController *)controller withDelegate:(\cf2 id\cf0 )delegate \{\cf2 \
+\'a0\
+//Validation\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum] == 
+\f2\b \cf8 NO
+\f1\b0 \cf0 )\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 || (delegate == 
+\f2\b \cf8 nil
+\f1\b0 \cf0 )\cf2 \
+\cf0 || (controller == 
+\f2\b \cf8 nil
+\f1\b0 \cf0 )) \{\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 return
+\f1\b0 \cf2  
+\f2\b \cf8 NO
+\f1\b0 \cf0 ;\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 \}\cf2 \
+//Create image picker\
+\cf0 _picker = [[UIImagePickerController alloc] init];\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 self
+\f1\b0 \cf0 .picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;\cf2 \
+
+\f2\b \cf8 self
+\f1\b0 \cf0 .picker.mediaTypes = [[
+\f2\b \cf8 NSArray
+\f1\b0 \cf2  \cf0 alloc] initWithObjects:(
+\f2\b \cf8 NSString
+\f1\b0 \cf2  \cf0 *)kUTTypeMovie, 
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+
+\f2\b \cf8 self
+\f1\b0 \cf0 .picker.allowsEditing = 
+\f2\b \cf8 YES
+\f1\b0 \cf0 ;\cf2 \
+
+\f2\b \cf8 self
+\f1\b0 \cf0 .picker.delegate = 
+\f2\b \cf8 self
+\f1\b0 \cf0 ;\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 [
+\f2\b \cf8 self
+\f1\b0 \cf2  \cf0 presentViewController:
+\f2\b \cf8 self
+\f1\b0 \cf0 .picker animated:
+\f2\b \cf8 YES
+\f1\b0 \cf2  \cf0 completion:
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 return
+\f1\b0 \cf2  
+\f2\b \cf8 YES
+\f1\b0 \cf0 ;\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 \}\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 In this method we are presented a UIImagePickerController for SavedPhotosAlbum with media type Video.\
+3. Add delegate methods for UIIMagePickerController as below-\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth19200\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\
+11\
+12\
+13\
+14\
+15\
+16\
+17\
+18\
+19\
+20\
+21\
+22\
+23\
+24\
+25\
+26\
+27\
+28\
+29\
+30\
+31\
+32\
+33\
+34\
+35\
+36\
+37\
+38\
+39\
+40\
+41\
+42\
+43\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf7 #pragma mark - ImagePicker Delegate Methods\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 - (\cf2 void\cf0 )imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(
+\f2\b \cf8 NSDictionary
+\f1\b0 \cf2  \cf0 *)info \{\cf2 \
+//dismiss ImagePickerController\
+\cf0 [
+\f2\b \cf8 self
+\f1\b0 \cf0 .picker dismissViewControllerAnimated:
+\f2\b \cf8 YES
+\f1\b0 \cf2  \cf0 completion:
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 NSString
+\f1\b0 \cf2  \cf0 *mediaType = [info objectForKey: UIImagePickerControllerMediaType];\cf2 \
+//handle Movie capture\
+\'a0\
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 ([mediaType isEqualToString:(
+\f2\b \cf8 NSString
+\f1\b0 \cf2  \cf0 *)kUTTypeMovie]) \{\cf2 \
+\'a0\
+
+\f2\b \cf8 NSLog
+\f1\b0 \cf0 (\cf9 @"Matching Success"\cf0 );\cf2 \
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (isVideoOne)\{\cf2 \
+\'a0\
+
+\f2\b \cf8 NSLog
+\f1\b0 \cf0 (\cf9 @"Video One Loaded"\cf0 );\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:\cf9 @"Video One Loaded"\cf2 \
+\cf0 message:\cf9 @"Video One Loaded"\cf2 \
+\cf0 delegate:
+\f2\b \cf8 nil
+\f1\b0 \cf2 \
+\cf0 cancelButtonTitle:\cf9 @"OK"\cf2 \
+\cf0 otherButtonTitles:
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\cf0 [alert show];\cf2 \
+\'a0\
+//capture selected videoOneURL\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 self
+\f1\b0 \cf0 .videoOneURL = [info objectForKey:UIImagePickerControllerMediaURL];\cf2 \
+
+\f2\b \cf8 NSLog
+\f1\b0 \cf0 (\cf9 @"videoOneURL = %@"\cf0 ,
+\f2\b \cf8 self
+\f1\b0 \cf0 .videoOneURL);\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 \} 
+\f2\b \cf8 else
+\f1\b0 \cf2  \cf0 \{\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 NSLog
+\f1\b0 \cf0 (\cf9 @"Video two Loaded"\cf0 );\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:\cf9 @"Video Two Loaded"\cf2 \
+\cf0 message:\cf9 @"Video Two Loaded"\cf2 \
+\cf0 delegate:
+\f2\b \cf8 nil
+\f1\b0 \cf2 \
+\cf0 cancelButtonTitle:\cf9 @"OK"\cf2 \
+\cf0 otherButtonTitles:
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\cf0 [alert show];\cf2 \
+\'a0\
+//capture selected videoTwoURL\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 self
+\f1\b0 \cf0 .videoTwoURL =[info objectForKey:UIImagePickerControllerMediaURL];\cf2 \
+
+\f2\b \cf8 NSLog
+\f1\b0 \cf0 (\cf9 @"videoTwoURL = %@"\cf0 ,
+\f2\b \cf8 self
+\f1\b0 \cf0 .videoTwoURL);\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 \}\cf2 \
+\'a0\
+\cf0 \}\cf2 \
+\'a0\
+\cf0 \}\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 This method dismiss UIImagePickerController and handle movie capture.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth780\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth11080\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 1\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 [info objectForKey:UIImagePickerControllerMediaURL];\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 with the help of this line capture video url.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth780\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth15480\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 1\
+2\
+3\
+4\
+5\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 - (\cf2 void\cf0 )imagePickerControllerDidCancel:(UIImagePickerController *)picker \{\cf2 \
+\'a0\
+//dismiss ImagePickerController\
+\cf0 [
+\f2\b \cf8 self
+\f1\b0 \cf0 .picker dismissViewControllerAnimated:
+\f2\b \cf8 YES
+\f1\b0 \cf2  \cf0 completion:
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\cf0 \}\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 This delegate method dismiss UIImagePickerController on the cancel button tapped of picker.\
+\pard\pardeftab720\sl760
+
+\b \cf4 Step 2 \'96 Manipulation On Video And Saving\cf5 \
+\pard\pardeftab720\sl520\sa200\qj
+
+\b0 \cf2 1. Added new file CustomVideoOverlapper with superclass NSObject into our project.\
+2. Add below code to CustomVideoOverlapper.h file -\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth19200\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\
+11\
+12\
+13\
+14\
+15\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf7 #import <UIKit/UIKit.h>\cf2 \
+\'a0\
+\cf7 #import <AVFoundation/AVFoundation.h>\cf2 \
+\cf7 #import <CoreMedia/CoreMedia.h>\cf2 \
+\cf7 #import <AssetsLibrary/AssetsLibrary.h>\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 @interface
+\f1\b0 \cf2  \cf0 CustomVideoOverlapper : 
+\f2\b \cf8 NSObject
+\f1\b0 \cf2  \cf0 \{\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 \}\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 @property
+\f1\b0 \cf0 (
+\f2\b \cf8 nonatomic
+\f1\b0 \cf0 , strong) UIViewController *controller;\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 - (\cf2 id\cf0 )initWithController:(UIViewController *)controller;\cf2 \
+\'a0\
+\cf0 - (\cf2 void\cf0 )videoOverlappingMethodWithVideoOneURL:(
+\f2\b \cf8 NSURL
+\f1\b0 \cf2  \cf0 *)videoOneURL andVideoTwoURL:(
+\f2\b \cf8 NSURL
+\f1\b0 \cf2  \cf0 *)videoTwoURL;\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 @end
+\f1\b0 \cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 3. Add this code in CustomVideoOverlapper.m\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth12080\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 @synthesize
+\f1\b0 \cf2  \cf0 controller = _controller;\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf7 #pragma mark - Initialisation\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 - (\cf2 id\cf0 )initWithController:(UIViewController *)controller \{\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 self
+\f1\b0 \cf2  \cf0 = [
+\f2\b \cf8 super
+\f1\b0 \cf2  \cf0 init];\cf2 \
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (
+\f2\b \cf8 self
+\f1\b0 \cf0 ) \{\cf2 \
+
+\f2\b \cf8 self
+\f1\b0 \cf0 .controller = controller;\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 \}\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 return
+\f1\b0 \cf2  
+\f2\b \cf8 self
+\f1\b0 \cf0 ;\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 \}\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 3. We need to add below code ViewController.h file\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth780\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth10120\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 1\
+2\
+3\
+4\
+5\
+6\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf7 #import "CustomVideoOverlapper.h"\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 @interface
+\f1\b0 \cf2  \cf0 ViewController () \{\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 CustomVideoOverlapper *videoOverlapper;\cf2 \
+BOOL \cf0 isVideoOne;\cf2 \
+\cf0 \}\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 4. and below code for EventHandler into ViewController.m file.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth780\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth19200\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 1\
+2\
+3\
+4\
+5\
+6\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 - (
+\f2\b \cf8 IBAction
+\f1\b0 \cf0 )overlapVideoButtonTapped:(\cf2 id\cf0 )sender \{\cf2 \
+\cf0 videoOverlapper = [[CustomVideoOverlapper alloc] initWithController:
+\f2\b \cf8 self
+\f1\b0 \cf0 ];\cf2 \
+\'a0\
+//Pass Two video URL's we saved previously for merging process\
+\cf0 [videoOverlapper videoOverlappingMethodWithVideoOneURL:
+\f2\b \cf8 self
+\f1\b0 \cf0 .videoOneURL andVideoTwoURL:
+\f2\b \cf8 self
+\f1\b0 \cf0 .videoTwoURL];\cf2 \
+\cf0 \}\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 this method will be called on Overlap Button Tapped.\
+5. Definition for method videoOverlappingMethodWithVideoOneURL: andVideoTwoURL into\uc0\u8232 CustomVideoOverlapper.m file.Complete Video Overlapping method is here -\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth1180\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth19200\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 001\
+002\
+003\
+004\
+005\
+006\
+007\
+008\
+009\
+010\
+011\
+012\
+013\
+014\
+015\
+016\
+017\
+018\
+019\
+020\
+021\
+022\
+023\
+024\
+025\
+026\
+027\
+028\
+029\
+030\
+031\
+032\
+033\
+034\
+035\
+036\
+037\
+038\
+039\
+040\
+041\
+042\
+043\
+044\
+045\
+046\
+047\
+048\
+049\
+050\
+051\
+052\
+053\
+054\
+055\
+056\
+057\
+058\
+059\
+060\
+061\
+062\
+063\
+064\
+065\
+066\
+067\
+068\
+069\
+070\
+071\
+072\
+073\
+074\
+075\
+076\
+077\
+078\
+079\
+080\
+081\
+082\
+083\
+084\
+085\
+086\
+087\
+088\
+089\
+090\
+091\
+092\
+093\
+094\
+095\
+096\
+097\
+098\
+099\
+100\
+101\
+102\
+103\
+104\
+105\
+106\
+107\
+108\
+109\
+110\
+111\
+112\
+113\
+114\
+115\
+116\
+117\
+118\
+119\
+120\
+121\
+122\
+123\
+124\
+125\
+126\
+127\
+128\
+129\
+130\
+131\
+132\
+133\
+134\
+135\
+136\
+137\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 - (\cf2 void\cf0 )videoOverlappingMethodWithVideoOneURL:(
+\f2\b \cf8 NSURL
+\f1\b0 \cf2  \cf0 *)videoOneURL andVideoTwoURL:(
+\f2\b \cf8 NSURL
+\f1\b0 \cf2  \cf0 *)videoTwoURL \{\cf2 \
+\'a0\
+//addedd ProgressHud\
+\cf0 [MBProgressHUD showHUDAddedTo:
+\f2\b \cf8 self
+\f1\b0 \cf0 .controller.view animated:
+\f2\b \cf8 YES
+\f1\b0 \cf0 ];\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (videoOneURL!= 
+\f2\b \cf8 nil
+\f1\b0 \cf2  \cf0 && videoTwoURL!=
+\f2\b \cf8 nil
+\f1\b0 \cf0 ) \{\cf2 \
+\'a0\
+//First Video\
+//firstAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"sample1" ofType:@"mp4"]] options:nil];\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 firstAsset = [AVAsset assetWithURL:videoOneURL];\cf2 \
+\'a0\
+//second Video\
+//secondAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"sample2" ofType:@"mp4"]] options:nil];\
+\cf0 secondAsset = [AVAsset assetWithURL:videoTwoURL];\cf2 \
+\cf0 \}\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (firstAsset != 
+\f2\b \cf8 nil
+\f1\b0 \cf2  \cf0 && secondAsset != 
+\f2\b \cf8 nil
+\f1\b0 \cf0 ) \{\cf2 \
+\'a0\
+//Create AVMutableComposition object\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 mixComposition = [[AVMutableComposition alloc] init];\cf2 \
+\'a0\
+// create first track\
+\cf0 AVMutableCompositionTrack *firstTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];\cf2 \
+\'a0\
+\cf0 [firstTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, firstAsset.duration)\cf2 \
+\cf0 ofTrack:[[firstAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0]\cf2 \
+\cf0 atTime:kCMTimeZero\cf2 \
+\cf0 error:
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\'a0\
+//create second track\
+\cf0 AVMutableCompositionTrack *secondTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];\cf2 \
+\'a0\
+\cf0 [secondTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, secondAsset.duration)\cf2 \
+\cf0 ofTrack:[[secondAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0]\cf2 \
+\cf0 atTime:kCMTimeZero\cf2 \
+\cf0 error:
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\'a0\
+//Main Instruction Layer\
+//crete Object of main Instruction layer and set timerange to it\
+\'a0\
+\cf0 AVMutableVideoCompositionInstruction *mainInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];\cf2 \
+\'a0\
+//Duration For Final Video should be max Duration of both video\
+\cf0 CMTime finalDuration;\cf2 \
+\cf0 CMTime result;\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 NSLog
+\f1\b0 \cf0 (\cf9 @"values =%f and %f"\cf0 ,CMTimeGetSeconds(firstAsset.duration),CMTimeGetSeconds(secondAsset.duration));\cf2 \
+\'a0\
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (CMTimeGetSeconds(firstAsset.duration) == CMTimeGetSeconds(secondAsset.duration)) \{\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 finalDuration = firstAsset.duration;\cf2 \
+\'a0\
+\cf0 \}
+\f2\b \cf8 else
+\f1\b0 \cf2  
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (CMTimeGetSeconds(firstAsset.duration) > CMTimeGetSeconds(secondAsset.duration)) \{\cf2 \
+\cf0 finalDuration = firstAsset.duration;\cf2 \
+\cf0 result = CMTimeSubtract(firstAsset.duration, secondAsset.duration);\cf2 \
+\'a0\
+\cf0 \}
+\f2\b \cf8 else
+\f1\b0 \cf2  \cf0 \{\cf2 \
+\'a0\
+\cf0 finalDuration = secondAsset.duration;\cf2 \
+\cf0 result = CMTimeSubtract(secondAsset.duration, firstAsset.duration);\cf2 \
+\'a0\
+\cf0 \}\cf2 \
+\cf0 mainInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, secondAsset.duration);\cf2 \
+\'a0\
+//InstructionLayer for first Track\
+\'a0\
+\cf0 AVMutableVideoCompositionLayerInstruction *firstlayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:firstTrack];\cf2 \
+\'a0\
+\cf0 CGAffineTransform scale = CGAffineTransformMakeScale(0.5f, 0.5f);\cf2 \
+\cf0 CGAffineTransform move = CGAffineTransformMakeTranslation(320, 0);\cf2 \
+\'a0\
+\cf0 [firstlayerInstruction setTransform:CGAffineTransformConcat(scale, move) atTime:kCMTimeZero];\cf2 \
+\'a0\
+//InstructionLayer for second Track\
+\'a0\
+\cf0 AVMutableVideoCompositionLayerInstruction *secondlayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:secondTrack];\cf2 \
+\'a0\
+\cf0 CGAffineTransform SecondScale = CGAffineTransformMakeScale(1.6f,1.6f);\cf2 \
+\'a0\
+\cf0 CGAffineTransform SecondMove = CGAffineTransformMakeTranslation(0,0);\cf2 \
+\'a0\
+//[secondlayerInstruction setOpacity:0.5 atTime:kCMTimeZero];\
+\'a0\
+\cf0 [secondlayerInstruction setOpacityRampFromStartOpacity:0.0 toEndOpacity:1.0 timeRange:CMTimeRangeMake(CMTimeMakeWithSeconds(2.9,60), CMTimeMakeWithSeconds(8.0, 60))];\cf2 \
+\'a0\
+\cf0 [secondlayerInstruction setTransform:CGAffineTransformConcat(SecondScale,SecondMove) atTime:kCMTimeZero];\cf2 \
+\'a0\
+//Now adding FirstInstructionLayer and SecondInstructionLayer to mainInstruction\
+\cf0 mainInstruction.layerInstructions = [
+\f2\b \cf8 NSArray
+\f1\b0 \cf2  \cf0 arrayWithObjects:firstlayerInstruction,secondlayerInstruction, 
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\'a0\
+// attach Main Instrcution To VideoCopositionn\
+//we can attch multipe Instrction to it\
+\'a0\
+\cf0 mainComposition = [AVMutableVideoComposition videoComposition];\cf2 \
+\cf0 mainComposition.instructions = [
+\f2\b \cf8 NSArray
+\f1\b0 \cf2  \cf0 arrayWithObjects:mainInstruction,
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\cf0 mainComposition.frameDuration = CMTimeMake(1, 30);\cf2 \
+\cf0 mainComposition.renderSize = CGSizeMake(640, 480);\cf2 \
+\'a0\
+// Get path To save merged video\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 NSArray
+\f1\b0 \cf2  \cf0 *paths = 
+\f2\b \cf8 NSSearchPathForDirectoriesInDomains
+\f1\b0 \cf0 (
+\f2\b \cf8 NSDocumentDirectory
+\f1\b0 \cf0 , 
+\f2\b \cf8 NSUserDomainMask
+\f1\b0 \cf0 , 
+\f2\b \cf8 YES
+\f1\b0 \cf0 );\cf2 \
+\'a0\
+
+\f2\b \cf8 NSString
+\f1\b0 \cf2  \cf0 *documentsDirectory = [paths objectAtIndex:0];\cf2 \
+\'a0\
+
+\f2\b \cf8 NSString
+\f1\b0 \cf2  \cf0 *myPathDocs = [documentsDirectory stringByAppendingPathComponent:\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 [
+\f2\b \cf8 NSString
+\f1\b0 \cf2  \cf0 stringWithFormat:\cf9 @"mergeVideo.mov"\cf0 ]];\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 NSFileManager
+\f1\b0 \cf2  \cf0 *fileManager = [
+\f2\b \cf8 NSFileManager
+\f1\b0 \cf2  \cf0 defaultManager];\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 [fileManager removeItemAtPath:myPathDocs error:
+\f2\b \cf8 NULL
+\f1\b0 \cf0 ];\cf2 \
+\'a0\
+\cf0 url = [
+\f2\b \cf8 NSURL
+\f1\b0 \cf2  \cf0 fileURLWithPath:myPathDocs];\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 NSLog
+\f1\b0 \cf0 (\cf9 @"URL:- %@"\cf0 , [url description]);\cf2 \
+\'a0\
+//create Exporter\
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:mixComposition presetName:AVAssetExportPresetHighestQuality];\cf2 \
+\'a0\
+\cf0 exporter.outputURL = url;\cf2 \
+\cf0 exporter.outputFileType = AVFileTypeQuickTimeMovie;\cf2 \
+\cf0 exporter.shouldOptimizeForNetworkUse = 
+\f2\b \cf8 YES
+\f1\b0 \cf0 ;\cf2 \
+\cf0 exporter.videoComposition = mainComposition;\cf2 \
+\cf0 [exporter exportAsynchronouslyWithCompletionHandler:^\{\cf2 \
+\'a0\
+\cf0 dispatch_async(dispatch_get_main_queue(), ^\{\cf2 \
+\'a0\
+\cf0 [
+\f2\b \cf8 self
+\f1\b0 \cf2  \cf0 exportDidFinish:exporter];\cf2 \
+\'a0\
+\cf0 \});\cf2 \
+\cf0 \}];\cf2 \
+\'a0\
+\cf0 \}
+\f2\b \cf8 else
+\f1\b0 \cf2  \cf0 \{\cf2 \
+\'a0\
+\cf0 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:\cf9 @"Error!"\cf2  \cf0 message:\cf9 @"Video Not Selected.PLease select videos to merege"\cf2 \
+\cf0 delegate:
+\f2\b \cf8 self
+\f1\b0 \cf2  \cf0 cancelButtonTitle:\cf9 @"OK"\cf2  \cf0 otherButtonTitles:
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\cf0 [alert show];\cf2 \
+\cf0 \}\cf2 \
+\'a0\
+\cf0 \}\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 In the above code we do the following -\
+1.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth780\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth12280\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 1\
+2\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 AVAsset *firstAsset = [AVAsset assetWithURL:videoOneURL];\cf2 \
+\cf0 AVAsset *secondAsset = [AVAsset assetWithURL:videoTwoURL];\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 using this code videos URL which we are obtained after selection of videos from media library to two different AVAsset objects.\
+2. Create AVMutableComposition object.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth780\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth15680\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 1\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 AVMutableComposition *mixComposition = [[AVMutableComposition alloc] init];\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 3. Create AVMutableCompositionTrack object for firstAsset and secondAsset.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth780\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth16080\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 1\
+2\
+3\
+4\
+5\
+6\
+7\
+8\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 AVMutableCompositionTrack *firstTrack =\cf2 \
+\cf0 [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo\cf2 \
+\cf0 preferredTrackID:kCMPersistentTrackID_Invalid];\cf2 \
+\'a0\
+\cf0 [firstTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, firstAsset.duration)\cf2 \
+\cf0 ofTrack:[[firstAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0]\cf2 \
+\cf0 atTime:kCMTimeZero\cf2 \
+\cf0 error:
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 using Set time range for track using method \ul insertTimeRange:ofTrack:atTime:error:\ulnone \uc0\u8232 By default inserted track\'92s time set to it\'92s natural duration and rates.\
+We can mange the duration for each video using \ul atTime\ulnone  parameter of this method or we can scale it to different duration using method \ul scaleTimeRange:toDuration:\ulnone \
+Do same for secondAsset also.\
+4. Now we can add instruction to AVMutableComposition such as video size, transitions, effects, etc. Without this we can not play both videos simultaneously. For that AVVideoComposition class is provided.\
+AVMutableComposition maintains an array of instructions to perform it\'92s composition i.e. AVMutableVideoCompositionInstruction. AVVideoCompositionInstructions itself contains an Array of AVVideoCompositionLayerInstruction defined for each layer.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth19200\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\
+11\
+12\
+13\
+14\
+15\
+16\
+17\
+18\
+19\
+20\
+21\
+22\
+23\
+24\
+25\
+26\
+27\
+28\
+29\
+30\
+31\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf2 //Main Instruction Layer\
+//crete Object of main Instruction layer and set timerange to it\
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 AVMutableVideoCompositionInstruction *mainInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];\cf2 \
+\'a0\
+//InstructionLayer for first Track\
+\'a0\
+\cf0 AVMutableVideoCompositionLayerInstruction *firstlayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:firstTrack];\cf2 \
+\'a0\
+\cf0 CGAffineTransform scale = CGAffineTransformMakeScale(0.5f, 0.5f);\cf2 \
+\cf0 CGAffineTransform move = CGAffineTransformMakeTranslation(320, 0);\cf2 \
+\'a0\
+\cf0 [firstlayerInstruction setTransform:CGAffineTransformConcat(scale, move) atTime:kCMTimeZero];\cf2 \
+\'a0\
+//InstructionLayer for second Track\
+\'a0\
+\cf0 AVMutableVideoCompositionLayerInstruction *secondlayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:secondTrack];\cf2 \
+\'a0\
+\cf0 CGAffineTransform secondScale = CGAffineTransformMakeScale(1.3f,1.5f);\cf2 \
+\'a0\
+\cf0 CGAffineTransform secondMove = CGAffineTransformMakeTranslation(0,0);\cf2 \
+\'a0\
+//[secondlayerInstruction setOpacity:0.5 atTime:kCMTimeZero];\
+\'a0\
+\cf0 [secondlayerInstruction setOpacityRampFromStartOpacity:0.0 toEndOpacity:1.0 timeRange:CMTimeRangeMake(CMTimeMakeWithSeconds(2.9,80), CMTimeMakeWithSeconds(8.0, 80))];\cf2 \
+\'a0\
+\cf0 [secondlayerInstruction setTransform:CGAffineTransformConcat(secondScale,secondMove) atTime:kCMTimeZero];\cf2 \
+\'a0\
+//Now adding FirstInstructionLayer and SecondInstructionLayer to mainInstruction\
+\'a0\
+\cf0 mainInstruction.layerInstructions = [
+\f2\b \cf8 NSArray
+\f1\b0 \cf2  \cf0 arrayWithObjects:firstlayerInstruction,secondlayerInstruction, 
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 We created a object of AVMutableVideoCompositionInstruction named \'93mainInstruction\'94.\uc0\u8232 Create AVMutableVideoCompositionLayerInstruction object for firstTrack and secondTrack named as \'93firstlayerInstruction\'94 and \'93secondlayerInstruction\'94 as above.\
+Using CGAffineTransform assign move and scale to both videos as per our requirement of where we want location and size of video. \ul setTransform:atTime:\ulnone  method provided by class AVMutableVideoCompositionLayerInstruction used to set CGAffineTransformation.\
+In our example we set values for CGAffineTransformation as such second video occupy whole screen and first video at top of right corner.\uc0\u8232 Now adding AVMutableVideoCompositionLayerInstruction objects i.e. firstlayerInstruction and secondlayerInstruction to AVMutableVideoCompositionInstruction\'92s instance property layerInstructions[NSArray].\
+5. Set time range to mainInstruction -\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth19200\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\
+11\
+12\
+13\
+14\
+15\
+16\
+17\
+18\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf2 //Duraton For Final Video should be max Duration of both video\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 CMTime finalDuration;\cf2 \
+\cf0 CMTime result;\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 NSLog
+\f1\b0 \cf0 (\cf9 @"values =%f and %f"\cf0 ,CMTimeGetSeconds(firstAsset.duration),CMTimeGetSeconds(secondAsset.duration));\cf2 \
+\'a0\
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (CMTimeGetSeconds(firstAsset.duration) == CMTimeGetSeconds(secondAsset.duration)) \{\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 finalDuration = firstAsset.duration;\cf2 \
+\cf0 \}
+\f2\b \cf8 else
+\f1\b0 \cf2  
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (CMTimeGetSeconds(firstAsset.duration) > CMTimeGetSeconds(secondAsset.duration)) \{\cf2 \
+\cf0 finalDuration = firstAsset.duration;\cf2 \
+\cf0 result = CMTimeSubtract(firstAsset.duration, secondAsset.duration);\cf2 \
+\cf0 \}
+\f2\b \cf8 else
+\f1\b0 \cf2  \cf0 \{\cf2 \
+\cf0 finalDuration = secondAsset.duration;\cf2 \
+\cf0 result = CMTimeSubtract(secondAsset.duration, firstAsset.duration);\cf2 \
+\cf0 \}\cf2 \
+\'a0\
+//CMTime duration = MAX(secondAsset.duration , firstAsset.duration);\
+\cf0 mainInstruction.timeRange = CMTimeRangeMake(kCMTimeZero,finalDuration);\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 Set time range to mainInstruction as maximum of both the videos i.e. max (firstAsset.duration,secondAsset.duration), but duration is CMTime object, for comparison we need to convert them into integer or float so there is method called\ul CMTimeGetSeconds\ulnone  provided by CMTime class. Then set check accordingly, means set duration for Final \'91mainInstruction\'92 to max of both asset and if both equal then set any of it.\
+6. Create AVMutableVideoComposition object with method videoComposition named \'93mainComposition\'94\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth780\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth19200\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 1\
+2\
+3\
+4\
+5\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf2 // attach Main Instrcution To VideoCopositionn\
+//we can attch multipe Instrction to it\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 AVMutableVideoComposition *mainComposition = [AVMutableVideoComposition videoComposition];\cf2 \
+\cf0 mainComposition.instructions = [
+\f2\b \cf8 NSArray
+\f1\b0 \cf2  \cf0 arrayWithObjects:mainInstruction,
+\f2\b \cf8 nil
+\f1\b0 \cf0 ]; mainComposition.frameDuration = CMTimeMake(1, 30);\cf2 \
+\cf0 mainComposition.renderSize = CGSizeMake(640, 480);\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 And add AVMutableVideoCompositionInstruction to it\'92s instance property \'96 instructions and also set frameDuration and render size for mainComposition.\
+We can add multiple AVMutableVideoCompositionInstruction objects to AVMutableVideoComposition object.\
+In our example we have added only one AVMutableVideoCompositionInstruction.\
+We can use multiple objects to add multiple layers of effects such as transition and fade but take care of that time ranges of the AVMutableVideoCompositionInstruction objects not to be overlap.\
+7. Create Path for saving final Merged video as -\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth19200\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf2 // Get path\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 NSArray
+\f1\b0 \cf2  \cf0 *paths = 
+\f2\b \cf8 NSSearchPathForDirectoriesInDomains
+\f1\b0 \cf0 (
+\f2\b \cf8 NSDocumentDirectory
+\f1\b0 \cf0 , 
+\f2\b \cf8 NSUserDomainMask
+\f1\b0 \cf0 , 
+\f2\b \cf8 YES
+\f1\b0 \cf0 );\cf2 \
+
+\f2\b \cf8 NSString
+\f1\b0 \cf2  \cf0 *documentsDirectory = [paths objectAtIndex:0];\cf2 \
+
+\f2\b \cf8 NSString
+\f1\b0 \cf2  \cf0 *myPathDocs = [documentsDirectory stringByAppendingPathComponent:\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 [
+\f2\b \cf8 NSString
+\f1\b0 \cf2  \cf0 stringWithFormat:\cf9 @"mergeVideo.mov"\cf0 ]];\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 NSFileManager
+\f1\b0 \cf2  \cf0 *fileManager = [
+\f2\b \cf8 NSFileManager
+\f1\b0 \cf2  \cf0 defaultManager];\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 [fileManager removeItemAtPath:myPathDocs error:
+\f2\b \cf8 NULL
+\f1\b0 \cf0 ];\cf2 \
+\cf0 url = [
+\f2\b \cf8 NSURL
+\f1\b0 \cf2  \cf0 fileURLWithPath:myPathDocs];\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 NSLog
+\f1\b0 \cf0 (\cf9 @"URL:- %@"\cf0 , [url description]);\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 8. Create AVAssetExportSession object named \'93exporter\'94.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth19200\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\
+11\
+12\
+13\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:mixComposition presetName:AVAssetExportPresetHighestQuality];\cf2 \
+\cf0 exporter.outputURL = url;\cf2 \
+\cf0 exporter.outputFileType = AVFileTypeQuickTimeMovie;\cf2 \
+\cf0 exporter.shouldOptimizeForNetworkUse = 
+\f2\b \cf8 YES
+\f1\b0 \cf0 ;\cf2 \
+\cf0 exporter.videoComposition = mainComposition;\cf2 \
+\cf0 [exporter exportAsynchronouslyWithCompletionHandler:^\{\cf2 \
+\'a0\
+\cf0 dispatch_async(dispatch_get_main_queue(), ^\{\cf2 \
+\'a0\
+\cf0 [
+\f2\b \cf8 self
+\f1\b0 \cf2  \cf0 exportDidFinish:exporter];\cf2 \
+\'a0\
+\cf0 \});\cf2 \
+\cf0 \}];\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 For exporter set asset to AVMutableComposition \'96 \'91mixComposition\'92 and set videoComposition to \'91mainComposition\'92 i.e. AVMutableVideoComposition.\uc0\u8232 Set outputURL as path we are created in step 7 to exporter, and set outputFileType of exporter to AVFileTypeQuickTimeMovie.\
+We can start export running by calling ExportAsynchronouslyWithCompletionHandler.\
+9. ExportAsynchronouslyWithCompletionHandler \'96 Starts asynchronous execution of an export session and it is return immediately. Status indicates the terminal state of the export session, and if a failure occurs, error describes the problem.\
+completion handler calls exportDidFinish: Implementation of this method\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth19200\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\
+11\
+12\
+13\
+14\
+15\
+16\
+17\
+18\
+19\
+20\
+21\
+22\
+23\
+24\
+25\
+26\
+27\
+28\
+29\
+30\
+31\
+32\
+33\
+34\
+35\
+36\
+37\
+38\
+39\
+40\
+41\
+42\
+43\
+44\
+45\
+46\
+47\
+48\
+49\
+50\
+51\
+52\
+53\
+54\
+55\
+56\
+57\
+58\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 -(\cf2 void\cf0 )exportDidFinish:(AVAssetExportSession*)session \{\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 NSLog
+\f1\b0 \cf0 (\cf9 @"exportDidFinish"\cf0 );\cf2 \
+\'a0\
+//Remove ProgressHud\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 [MBProgressHUD hideHUDForView:
+\f2\b \cf8 self
+\f1\b0 \cf0 .controller.view animated:
+\f2\b \cf8 YES
+\f1\b0 \cf0 ];\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (session.status == AVAssetExportSessionStatusCompleted) \{\cf2 \
+\'a0\
+
+\f2\b \cf8 NSURL
+\f1\b0 \cf2  \cf0 *outputURL = session.outputURL;\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 ([library videoAtPathIsCompatibleWithSavedPhotosAlbum:outputURL]) \{\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 [library writeVideoAtPathToSavedPhotosAlbum:outputURL completionBlock:^(
+\f2\b \cf8 NSURL
+\f1\b0 \cf2  \cf0 *assetURL, 
+\f2\b \cf8 NSError
+\f1\b0 \cf2  \cf0 *error) \{\cf2 \
+\'a0\
+\cf0 dispatch_async(dispatch_get_main_queue(), ^\{\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (error) \{\cf2 \
+\'a0\
+
+\f2\b \cf8 NSLog
+\f1\b0 \cf0 (\cf9 @"write Video To AssestsLibrary failed: %@"\cf0 , error);\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:\cf9 @"Error"\cf2 \
+\cf0 message:\cf9 @"Video Saving Failed"\cf2 \
+\cf0 delegate:
+\f2\b \cf8 nil
+\f1\b0 \cf2 \
+\cf0 cancelButtonTitle:\cf9 @"OK"\cf2 \
+\cf0 otherButtonTitles:
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\cf0 [alert show];\cf2 \
+\'a0\
+\cf0 \}
+\f2\b \cf8 else
+\f1\b0 \cf2  \cf0 \{\cf2 \
+\'a0\
+\cf0 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:\cf9 @"Video Saved"\cf2 \
+\cf0 message:\cf9 @"Saved To Photo Album"\cf2 \
+\cf0 delegate:
+\f2\b \cf8 self
+\f1\b0 \cf2 \
+\cf0 cancelButtonTitle:\cf9 @"OK"\cf2 \
+\cf0 otherButtonTitles:
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\cf0 alert.tag = 1000;\cf2 \
+\cf0 [alert show];\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 NSLog
+\f1\b0 \cf0 (\cf9 @"Writing3"\cf0 );\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 \}\cf2 \
+\'a0\
+\cf0 \});\cf2 \
+\cf0 \}];\cf2 \
+\'a0\
+\cf0 \}
+\f2\b \cf8 else
+\f1\b0 \cf2  \cf0 \{\cf2 \
+\'a0\
+\cf0 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:\cf9 @"Error!"\cf2 \
+\cf0 message:\cf9 @"Video asset export failed"\cf2 \
+\cf0 delegate:
+\f2\b \cf8 self
+\f1\b0 \cf2 \
+\cf0 cancelButtonTitle:\cf9 @"OK"\cf2 \
+\cf0 otherButtonTitles:
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\cf0 [alert show];\cf2 \
+\cf0 \}\cf2 \
+\'a0\
+\cf0 \}\cf2 \
+\'a0\
+\cf0 \}\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 In this method implementation check exporter status and if it is AVAssetExportSessionStatusCompleted then save that video to photo album with Path we set as above for final video by giving alert to save video or not and if we select save then handle validation for video saved successfully or not.\
+If we selected for \'93Want play video alert \'93 yes then below code will be called\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth19200\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\
+11\
+12\
+13\
+14\
+15\
+16\
+17\
+18\
+19\
+20\
+21\
+22\
+23\
+24\
+25\
+26\
+27\
+28\
+29\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf7 #pragma mark - UIAlertView Delegate Method\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 - (\cf2 void\cf0 )alertView:(UIAlertView *)alertView clickedButtonAtIndex:(
+\f2\b \cf8 NSInteger
+\f1\b0 \cf0 )buttonIndex \{\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (alertView.tag == 1000) \{\cf2 \
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (buttonIndex == 0) \{\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 UIAlertView *playAlert = [[UIAlertView alloc] initWithTitle:\cf9 @"Play Video"\cf2 \
+\cf0 message:\cf9 @"Dou you want play it immdiately?"\cf2 \
+\cf0 delegate:
+\f2\b \cf8 self
+\f1\b0 \cf2 \
+\cf0 cancelButtonTitle:\cf9 @"Yes"\cf2 \
+\cf0 otherButtonTitles:\cf9 @"later"\cf0 , 
+\f2\b \cf8 nil
+\f1\b0 \cf0 ];\cf2 \
+\cf0 playAlert.tag = 2000;\cf2 \
+\cf0 [playAlert show];\cf2 \
+\'a0\
+\cf0 \}
+\f2\b \cf8 else
+\f1\b0 \cf2  \cf0 \{\cf2 \
+\'a0\
+\cf0 \}\cf2 \
+\'a0\
+\cf0 \}
+\f2\b \cf8 else
+\f1\b0 \cf2  
+\f2\b \cf8 if
+\f1\b0 \cf0 (alertView.tag == 2000)\{\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (buttonIndex == 0) \{\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 CustomMoviePlayer *moviePlayer = [[CustomMoviePlayer alloc] initWithController:
+\f2\b \cf8 self
+\f1\b0 \cf0 .controller andURLForMovie:url];\cf2 \
+\'a0\
+\cf0 [moviePlayer playVideo];\cf2 \
+\'a0\
+\cf0 \}\cf2 \
+\cf0 \}\cf2 \
+\cf0 \}\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 Now we are ready to play merged video. We can play video by AVPlayer of AVFoundation. Or we can play video with application layer framework Media Player.\
+In our example we are using MediaPlayerViewController class of media player to play saved video.\
+\pard\pardeftab720\sl760
+
+\b \cf4 Step 3 \'96 Play Saved Video Using Mediaplayerviewcontroller\cf5 \
+\pard\pardeftab720\sl520\sa200\qj
+
+\b0 \cf2 1. Create file CustomMoviePlayer and include following code CustomMoviePlayer.h file -\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth17480\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf7 #import <Foundation/Foundation.h>\cf2 \
+\cf7 #import <MediaPlayer/MediaPlayer.h>\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 @interface
+\f1\b0 \cf2  \cf0 CustomMoviePlayer : 
+\f2\b \cf8 NSObject
+\f1\b0 \cf2 \
+\'a0\
+
+\f2\b \cf8 @property
+\f1\b0 \cf0 (
+\f2\b \cf8 nonatomic
+\f1\b0 \cf0 , strong) UIViewController *controller;\cf2 \
+
+\f2\b \cf8 @property
+\f1\b0 \cf0 (
+\f2\b \cf8 nonatomic
+\f1\b0 \cf0 , strong) 
+\f2\b \cf8 NSURL
+\f1\b0 \cf2  \cf0 *url;\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 - (\cf2 id\cf0 )initWithController:(UIViewController *)controller andURLForMovie:(
+\f2\b \cf8 NSURL
+\f1\b0 \cf2  \cf0 *)url;\cf2 \
+\cf0 - (\cf2 void\cf0 )playVideo;\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 2. Include below into CustomMoviePlayer.m file-\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth17680\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\
+11\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 @synthesize
+\f1\b0 \cf2  \cf0 url = _url;\cf2 \
+
+\f2\b \cf8 @synthesize
+\f1\b0 \cf2  \cf0 controller = _controller;\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf7 #pragma mark - Initialisation\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 - (\cf2 id\cf0 )initWithController:(UIViewController *)controller andURLForMovie:(
+\f2\b \cf8 NSURL
+\f1\b0 \cf2  \cf0 *)url \{\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 self
+\f1\b0 \cf2  \cf0 = [
+\f2\b \cf8 super
+\f1\b0 \cf2  \cf0 init];\cf2 \
+
+\f2\b \cf8 if
+\f1\b0 \cf2  \cf0 (
+\f2\b \cf8 self
+\f1\b0 \cf0 ) \{\cf2 \
+
+\f2\b \cf8 self
+\f1\b0 \cf0 .controller = controller;\cf2 \
+
+\f2\b \cf8 self
+\f1\b0 \cf0 .url = url;\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 \}\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+
+\f2\b \cf8 return
+\f1\b0 \cf2  
+\f2\b \cf8 self
+\f1\b0 \cf0 ;\cf2 \
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 \}\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 3. code for playing video -\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth980\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth15880\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 01\
+02\
+03\
+04\
+05\
+06\
+07\
+08\
+09\
+10\
+11\
+12\
+13\
+14\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf7 #pragma mark - Public Method\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 - (\cf2 void\cf0 )playVideo \{\cf2 \
+\'a0\
+\cf0 MPMoviePlayerViewController *theMovie = [[MPMoviePlayerViewController alloc]\cf2 \
+\cf0 initWithContentURL:
+\f2\b \cf8 self
+\f1\b0 \cf0 .url];\cf2 \
+\cf0 [
+\f2\b \cf8 self
+\f1\b0 \cf0 .controller presentMoviePlayerViewControllerAnimated:theMovie];\cf2 \
+\'a0\
+// Register for the playback finished notification\
+\cf0 [[
+\f2\b \cf8 NSNotificationCenter
+\f1\b0 \cf2  \cf0 defaultCenter] addObserver:
+\f2\b \cf8 self
+\f1\b0 \cf2 \
+\cf0 selector:
+\f2\b \cf8 @selector
+\f1\b0 \cf0 (myMovieFinishedCallback:)\cf2 \
+\cf0 name:MPMoviePlayerPlaybackDidFinishNotification\cf2 \
+\cf0 object:theMovie];\cf2 \
+\cf0 \}\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 Create Object of MPMoviePlayerViewController and pass URL for our saved video and set that object to presentMoviePlayerViewControllerAnimated for our own controller.\
+Here register for playback notification, Adds a callback method that will be executed once the movie finishes playing \'96 myMovieFinishedCallback: So video is playing here.\
+4. myMovieFinishedCallback implementation -\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt\clvertalbase \clshdrawnil \clwWidth780\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx4320
+\clvertalt\clvertalbase \clshdrawnil \clwWidth13480\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl360\qr
+
+\f1\fs34 \cf6 1\
+2\
+3\
+4\
+5\
+6\
+7\
+8\
+9\cell 
+\pard\intbl\itap1\pardeftab720\sl360
+\cf7 #pragma mark - Notification\cf2 \
+\'a0\
+\pard\intbl\itap1\pardeftab720\sl360
+\cf0 - (\cf2 void\cf0 )myMovieFinishedCallback:(
+\f2\b \cf8 NSNotification
+\f1\b0 \cf2  \cf0 *)notification \{\cf2 \
+\'a0\
+\cf0 [
+\f2\b \cf8 self
+\f1\b0 \cf0 .controller dismissMoviePlayerViewControllerAnimated];\cf2 \
+\cf0 MPMoviePlayerViewController *movie = [notification object];\cf2 \
+\cf0 [[
+\f2\b \cf8 NSNotificationCenter
+\f1\b0 \cf2  \cf0 defaultCenter] removeObserver:
+\f2\b \cf8 self
+\f1\b0 \cf2 \
+\cf0 name:MPMoviePlayerPlaybackDidFinishNotification object:movie];\cf2 \
+\cf0 \}\cf2 \cell \lastrow\row
+\pard\pardeftab720\sl520\sa200\qj
+
+\f0\fs28 \cf2 Here dismiss Movie player and remove that registered observer.\
+After Merging Of two videos => {\field{\*\fldinst{HYPERLINK "http://mobisoftinfotech.com/video-manipulation-tutorial-iphone/%3C?php%20echo%20get_bloginfo('template_url')%20?%3E/wp-content/uploads/2012/12/finalVideo.mov%E2%80%9D%3EfinalVideo%3C/a%3E%3C/p%3E%3Cp%3EComplete%20source%20code%20is%20available%20here%20%E2%80%93%20%3Ca%20href="}}{\fldrslt \cf10 /Wp-Content/Uploads/2012/12/Videooverlappingdemo.Zip\'94>Videooverlappingdemo}}\
+\pard\pardeftab720\sl520\sa200
+
+\fs20 \cf11 \cb12 3 COMMENTS ON \'93VIDEO MANIPULATING TUTORIAL ON IPHONE\'94\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sl520
+\ls1\ilvl0
+\fs24 \cf11 \cb13 {\listtext	.	}\cf0 \cf11 \
+{\listtext	.	}kiran yasala on {\field{\*\fldinst{HYPERLINK "http://mobisoftinfotech.com/video-manipulation-tutorial-iphone/#comment-175263"}}{\fldrslt 
+\b \cf10 October 18, 2013 At 5:30 Pm}} said:\uc0\u8232 \u8232 
+\fs28 \cf2 Hi Guys,\uc0\u8232 I have one problem that I mentioned in the following\u8232 1) Before merging, we take the videos URLs(static videos or camera captured videos) from array, and store them into assets.\u8232 2) In the processing of storing the URLs into assets,\u8232 1) First, we take the first URL into \'91firstVideoAsset\'92, after that we take second URL into \'91secondVideoAsset\'92. Then merge the two videos and store the merged URL into again \'91firstVideoAsset\'92.\u8232 2) After that, take the take third URL into \'91secondVideoAsset\'92. Them merge the two videos. Same process will go on until the loop ends.\u8232 3) Send the final merged URL into MPMoviePlayerController to play the \'91preview\'92 of the merged video.\u8232 Orientation issue:-\u8232 1) While in the merging process, if we capture the video in \'91landscape\'92 orientation(i.e. LandscapeLeft), the captured video after merging, is coming in \'91Upside-down\'92 mode(i.e. reverse of captured video).\u8232 2) The sizes of all the videos(static or camera captured) are not coming in same size after merging.\u8232 3) If we capture the video using front camera, after merging all, the captured videos are coming in upside down.\u8232 Need help from your side:-\u8232 1) Before merging, if we capture the videos in any orientation mode, they have to come in only one orientation(i.e. LandscapeLeft or LandscapeRight) mode after merging.\u8232 2) After merging all the videos, the sizes(height and width) of all the videos(static or camera captured) in any orientation mode, should come in same sizes.\u8232 3) While using front camera, if we capture the video in Landscape left mode, after merging all the videos, the captured videos will come correct mode. But, when capture the video in Landscape right mode, the captured videos after merging all the videos will come in Upside down.(i.e. Reverse of original captured video).\u8232 4) While using back camera, if we capture the video in Landscape left mode, after merging all the videos, the captured videos will come in Upside down.(i.e. Reverse of original captured video) . But, when capture the video in Landscape right mode, the captured videos after merging all the videos will come in correct mode.\u8232 \u8232 \
+}
